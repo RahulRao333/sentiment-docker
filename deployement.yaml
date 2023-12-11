@@ -1,0 +1,33 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-task-service
+spec:
+  selector:
+    app: ai-task-app
+  ports:
+    - protocol: "TCP"
+      port: 6000
+      targetPort: 5000
+  type: LoadBalancer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-task-deployment
+spec:
+  selector:
+    matchLabels:
+      app: ai-task-app
+  replicas: 5
+  template:
+    metadata:
+      labels:
+        app: ai-task-app
+    spec:
+      containers:
+        - name: ai-task-app
+          image: rahulrao474/aitask-app:latest
+          imagePullPolicy: IfNotPresent
+          ports:
+            - containerPort: 5000
